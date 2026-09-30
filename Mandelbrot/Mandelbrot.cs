@@ -201,6 +201,10 @@ void DrawMandelBrot()
 			{
 				img.SetPixel(i, j, chsnColor);
 			}
+			if (mandelNumber == maxIterations)
+			{
+				img.SetPixel(i, j, Color.FromArgb(0, 0, 0));
+			}
 			else
 			{
 				double factor = 0.2 + ((mandelNumber * 15) % 200) / 200.0;
@@ -222,3 +226,6 @@ init();
 DrawMandelBrot();
 
 Application.Run(screen);
+
+
+// preset 1: -0.6025226465088581, 0.43666940855418046, 3.1820738254087074e-10
