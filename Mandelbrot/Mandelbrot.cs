@@ -69,8 +69,6 @@ void getInput()
     float midY = float.Parse(midYInput.Text);
     float scale = float.Parse(scaleInput.Text);
     int maxIterations = int.Parse(iterationsInput.Text);
-
-    return 
 }
 
 
