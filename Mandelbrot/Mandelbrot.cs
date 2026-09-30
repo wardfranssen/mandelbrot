@@ -26,6 +26,7 @@ Button presetE = new Button();
 ColorDialog colorDlg = new ColorDialog();
 Button chsColor = new Button();
 Color chsnColor = new Color();
+chsnColor = Color.White;
 
 double midX = 0f;
 double midY = 0f;
@@ -36,7 +37,7 @@ void init()
 {
 	screen.Text = "Mandelbrot";
 	screen.BackColor = Color.LightYellow;
-	screen.ClientSize = new Size(500, 500);
+	screen.ClientSize = new Size(500, 600);
 
 	midXInput.Location = new Point(250 - midXInput.Width / 2, 10);
 	midXInput.Text = "0";
@@ -59,26 +60,28 @@ void init()
 	iterationsLabel.Location = new Point(iterationsInput.Location.X - iterationsInput.Width / 2 - 10, iterationsInput.Location.Y);
 	iterationsLabel.Text = "Aantal: ";
 
+	chsColor.Location = new Point(170 - chsColor.Width / 2, iterationsInput.Location.Y + chsColor.Height + 10);
+	chsColor.Text = "Kies kleur";
+	chsColor.Click += chsClrClick;
+
 	goBtn.Location = new Point(250 - goBtn.Width / 2, iterationsInput.Location.Y + iterationsInput.Height + 10);
 	goBtn.Text = "Go!";
 	goBtn.BackColor = Color.White;
 	goBtn.Click += btnClick;
 	mandelBrotLabel.MouseClick += mandelClick;
 
-	presetA.Location = new Point(250, 0);
-	presetB.Location = new Point(250, 20);
-	presetC.Location = new Point(250, 40);
-	presetD.Location = new Point(250, 60);
-	presetE.Location = new Point(250, 80);
+	presetA.Location = new Point(350, 0);
+	presetB.Location = new Point(350, 20);
+	presetC.Location = new Point(350, 40);
+	presetD.Location = new Point(350, 60);
+	presetE.Location = new Point(350, 80);
 	presetA.Text = "A";
 	presetB.Text = "B";
 	presetC.Text = "C";
 	presetD.Text = "D";
 	presetE.Text = "E";
 
-	chsColor.Location = new Point(350, 0);
-	chsColor.Text = "Kies kleur";
-	chsColor.Click += chsClrClick;
+
 
 
 
@@ -119,13 +122,13 @@ void chsClrClick(object? o, EventArgs ea)
 	}
 }
 
-void btnClick(object? o, EventArgs ea)
+void btnClick(object o, EventArgs ea)
 {
 	getInput();
 	DrawMandelBrot();
 }
 
-void mandelClick(object? o, MouseEventArgs mea)
+void mandelClick(object o, MouseEventArgs mea)
 {
 	midX = midX + (mea.X - 200) * scale;
 	midY = midY + (mea.Y - 200) * scale;
@@ -196,11 +199,17 @@ void DrawMandelBrot()
 
 			if (mandelNumber % 2 == 0)
 			{
-				img.SetPixel(i, j, Color.Black);
+				img.SetPixel(i, j, chsnColor);
 			}
 			else
 			{
-				img.SetPixel(i, j, Color.FromArgb((chsnColor.R + mandelNumber % 20) % 255, (chsnColor.G + mandelNumber % 20) % 255, (chsnColor.B + mandelNumber % 20) % 255));
+				double factor = 0.2 + ((mandelNumber * 15) % 200) / 200.0;
+
+				int r = Math.Clamp((int)(chsnColor.R * factor), 0, 255);
+				int g = Math.Clamp((int)(chsnColor.G * factor), 0, 255);
+				int b = Math.Clamp((int)(chsnColor.B * factor), 0, 255);
+
+				img.SetPixel(i, j, Color.FromArgb(r, g, b));
 			}
 		}
 	}
