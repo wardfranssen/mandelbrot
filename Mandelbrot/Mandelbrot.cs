@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
+using System.Drawing;
+using System;
 
 
 Form screen = new Form();
@@ -45,7 +45,8 @@ int userG = 255;
 int userBrightness = 100;
 int userBgBrightness = 100;
 
-void init()
+
+void Init()
 {
 	screen.Text = "Mandelbrot";
 	screen.BackColor = Color.LightYellow;
@@ -124,8 +125,8 @@ void init()
 	goBtn.Text = "Go!";
 
 	goBtn.BackColor = Color.White;
-	goBtn.Click += btnClick;
-	mandelBrotLabel.MouseClick += mandelClick;
+	goBtn.Click += BtnClick;
+	mandelBrotLabel.MouseClick += MandelClick;
 
 	presetA.Location = new Point(350, 0);
 	presetB.Location = new Point(350, 20);
@@ -133,8 +134,11 @@ void init()
 	presetA.Text = "A";
 	presetB.Text = "B";
 	presetC.Text = "C";
+	presetA.Click += PresetA;
+	presetB.Click += PresetB;
+	presetC.Click += PresetC;
 
-	mandelBrotLabel.Location = new Point(50, goBtn.Location.Y + goBtn.Height + 15);
+    mandelBrotLabel.Location = new Point(50, goBtn.Location.Y + goBtn.Height + 15);
 	mandelBrotLabel.Size = new Size(400, 400);
 
 	screen.Controls.Add(presetA);
@@ -174,13 +178,13 @@ void init()
     brightnessSlider.BringToFront();
 }
 
-void btnClick(object o, EventArgs ea)
+void BtnClick(object o, EventArgs ea)
 {
-	getInput();
+	GetInput();
 	DrawMandelBrot();
 }
 
-void mandelClick(object o, MouseEventArgs mea)
+void MandelClick(object o, MouseEventArgs mea)
 {
 	midX = midX + (mea.X - 200) * scale;
 	midY = midY + (mea.Y - 200) * scale;
@@ -202,7 +206,7 @@ void mandelClick(object o, MouseEventArgs mea)
 }
 
 
-void getInput()
+void GetInput()
 {
 	midX = double.Parse(midXInput.Text);
 	midY = double.Parse(midYInput.Text);
@@ -283,7 +287,7 @@ void DrawMandelBrot()
 			double smooth = mandelNumber - Math.Log(Math.Log(dist)) / Math.Log(2);
 
             // Bepaald hoe snel we door het kleurenpalet gaan
-            double position = smooth * 0.15;
+            double position = smooth * 0.2;
 
 			// Zorg ervoor dat we binnen de range van het palet blijven
             position %= customPalette.Count;
@@ -304,7 +308,7 @@ void DrawMandelBrot()
             if (mandelNumber == maxIterations)
 			{
 				color = Color.Black;
-			} else if (mandelNumber < Math.Max(maxIterations/15, 10))
+			} else if (mandelNumber < Math.Max(maxIterations / 15, 10))
 			{
 				// Als het mandelgetal kleiner is dan 1/15de van de maximale iteraties(minstens 10) dan valt onder de "achtergrond" van het figuur
 				// De helderheid van de "achtergrond" kan je dan zelf instellen
@@ -323,13 +327,52 @@ void DrawMandelBrot()
 }
 
 
-init();
+void PresetA(object o, EventArgs ea)
+{
+	midXInput.Text = "-" + 0.60252264;
+	midYInput.Text = 0.43666940855418046.ToString();
+	scaleInput.Text = 3.1820738254087074e-10.ToString();
+	iterationsInput.Text = 500.ToString();
+
+    bgBrightnessSlider.Value = 0;
+    brightnessSlider.Value = 100;
+
+    BtnClick(o, ea);
+}
+
+void PresetB(object o, EventArgs ea)
+{
+    midXInput.Text = 0.30422.ToString();
+    midYInput.Text = 0.022075.ToString();
+    scaleInput.Text = 2.5e-5.ToString();
+    iterationsInput.Text = 750.ToString();
+
+    bgBrightnessSlider.Value = 0;
+    brightnessSlider.Value = 100;
+
+    BtnClick(o, ea);
+}
+
+void PresetC(object o, EventArgs ea)
+{
+    midXInput.Text = "-" + 1.25067154585;
+    midYInput.Text = 0.02012043845.ToString();
+    scaleInput.Text = 1.4615e-7.ToString();
+    iterationsInput.Text = 2000.ToString();
+
+	rSlider.Value = 50;
+	gSlider.Value = 50;
+	bSlider.Value = 50;
+
+	bgBrightnessSlider.Value = 100;
+	brightnessSlider.Value = 75;
+
+    BtnClick(o, ea);
+}
+
+
+Init();
 
 DrawMandelBrot();
 
 Application.Run(screen);
-
-
-// preset 1: -0.6025226465088581, 0.43666940855418046, 3.1820738254087074e-10
-// preset 2: -0,15812500000000007, -1,0328125000000001, 7,8125E-05, 1000
-// preset 3: -0,5927246093750002, -0,6205786132812497, 1,953125E-05, 500
